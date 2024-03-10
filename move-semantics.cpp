@@ -5,7 +5,7 @@ class String {
 
 
     public:
-        String() = default;
+        String() { data = nullptr; size = 0; }
 
         String(const char* d) {
             std::cout << "Created!" << std::endl;
@@ -30,7 +30,23 @@ class String {
             other.size = 0;
         }
 
+        String& operator=( String&& other ) { // move assignment
+
+            if ( this != &other ) {
+                std::cout << "Moved Assignment!" << std::endl;
+                if (data != nullptr) delete[] data;
+                size = other.size;
+                data = other.data;
+
+                other.data = nullptr;
+                other.size = 0;
+            }
+
+            return *this;
+        }
+
         void Print() {
+            std::cout << "Print, Size = " << size << std::endl;
             for ( int i = 0; i < size; ++i )
                 std::cout << data[i];
             std::cout << std::endl;
@@ -38,7 +54,7 @@ class String {
 
         ~String() {
             std::cout << "Destroyed!" << std::endl;
-            delete data;
+            delete[] data;
         }
 
     private:
@@ -76,8 +92,22 @@ class Entity {
 
 int main() {
 
-    Entity myentity("hello");
-    myentity.PrintName();
+    String str = "khizar"; // looks like ASSIGNMENT, but NO.
+    String str2;
+
+    str.Print();
+    std::cout << "HEY" << std::endl;
+    str2.Print();
+
+    str2 = std::move(str);
+
+    str.Print();
+    std::cout << "HEY" << std::endl;
+    str2.Print();
+
+    //Entity myentity("hello");
+    //myentity.PrintName();
+
     //String mystr("hello");
     //mystr.Print();
 
